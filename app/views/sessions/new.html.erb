@@ -1,0 +1,5 @@
+<%= form_tag 'login', method: :post do %>
+  <%= email_field_tag :email, params[:email], placeholder: "Email" %>
+  <%= password_field_tag :password_field_tag, nil, placeholder: "Password" %>
+  <%= submit_tag "Log In" %>
+<% end %>

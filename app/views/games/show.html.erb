@@ -1,0 +1,42 @@
+<% @game.boards.each do |board| %>
+  <% positions = board.piece_positions.includes(:piece) %>
+
+  <div class="board" style="width: 100%; max-width: 480px;">
+    <% Board::X_AXIS.each do |x| %>
+      <div class="row" style="width: 100%;">
+        <% Board::Y_AXIS.each do |y| %>
+          <%
+            coords ="#{x}#{y}"
+            checked = positions.detect { |pos| pos.position == coords } || board.board_moves.any? { |m| m.position == coords } %>
+          <div class="cell<%= ' checked' if checked %>" style="width: <%= 100.0 / Board::Y_AXIS.size %>%; border: 1px solid; box-sizing: border-box; float: left;<%= " background: #{checked.piece.color};" if checked.is_a?(PiecePosition) %><%= " background: #888;" if checked == true %>;">
+            <%= link_to_unless checked, "&nbsp;".html_safe, board_move_path(board, coords), class: "cell-link", method: :post %>
+          </div>
+        <% end %>
+        <div style="clear: both;"></div>
+      </div>
+    <% end %>
+  </div><br>
+<% end %>
+
+<style type="text/css">
+  .cell-link {
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    text-decoration: none;
+  }
+  .cell.checked {
+  }
+  .cell:not(.checked) .cell-link:hover {
+    background: #eee;
+  }
+
+</style>
+
+<script type="text/javascript">
+  var cells = document.querySelectorAll(".cell")
+
+  for (i = 0; i < cells.length; i++) {
+    cells[i].style.height = cells[i].offsetWidth + "px";
+  }
+</script>
